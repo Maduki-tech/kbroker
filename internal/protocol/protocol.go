@@ -2,22 +2,24 @@
 package protocol
 
 import (
-	"log"
+	"fmt"
 	"strings"
 )
 
 // ParseMessage parses the message raw content
-func ParseMessage(msg string) {
+func ParseMessage(msg string) (string, error) {
 	splitString := strings.Split(msg, " ")
 	cmd := splitString[0]
 	text := strings.Join(splitString[1:], " ")
 
 	switch cmd {
 	case "PRODUCE":
-		log.Println(text)
+		// TODO: Add to log files
+		return text, nil
 	case "FETCH":
-		log.Printf("Get %s\n", text)
+		// TODO: get from log file
+		return text, nil
 	default:
-		log.Fatalf("%s is not a correct command", cmd)
+		return "", fmt.Errorf("%s is not a correct command", cmd)
 	}
 }

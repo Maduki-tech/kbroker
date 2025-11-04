@@ -3,6 +3,7 @@ package main
 import (
 	"net"
 
+	"github.com/maduki-tech/kbroker/internal/logstore"
 	"github.com/maduki-tech/kbroker/internal/protocol"
 )
 
@@ -29,10 +30,16 @@ func handleConnection(conn net.Conn) {
 
 	packet := make([]byte, 4096)
 	for {
-		_, err := conn.Read(packet)
+		n, err := conn.Read(packet)
 		if err != nil {
 			panic(err)
 		}
-		protocol.ParseMessage(string(packet))
+		msg, err := protocol.ParseMessage(string(packet[:n]))
+		if err != nil {
+			panic(err)
+		}
+
+		logstore.Write(msg)
+
 	}
 }
